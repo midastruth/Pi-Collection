@@ -4,3 +4,4 @@
 
 ## 已收录
 - [pi-skills](./pi-skills/) - 跨多 agent 的 skills 集合仓库
+- [pi-updater](./pi-updater/) - pi 本体自动更新扩展，支持启动检查、版本跳过、npm 安装与升级后重启
