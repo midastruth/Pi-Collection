@@ -29,6 +29,8 @@
 - [pi-autoresearch](./Workflow-Automation/pi-autoresearch/) - 自动实验优化循环扩展，支持 benchmark 执行、结果保留/回滚、dashboard 与 finalize skill
 - [pi-updater](./Utility-Developer-Experience/pi-updater/) - pi 本体自动更新扩展，支持启动检查、npm 安装升级与会话重启
 - [pi-rollback](./Command/pi-rollback/) - 分支感知的检查点与回滚扩展，支持 `/checkpoint` 打标、`/rollback` 退回更早节点，并自动保留被放弃分支的摘要
+- [pi-design-deck](./Tool/pi-design-deck/) - 为 agent 提供 `design_deck` 工具，以多幻灯片可视化决策面板呈现多方案对比，用户选择后结果直接返回 agent
+- [pi-caveman](./Event-Hook/pi-caveman/) - 通过 `before_agent_start` 注入压缩型回答规则，并配合 `/caveman` 命令、状态恢复与底部状态栏降低输出冗长度
 
 ## 说明
 如果后续新增仓库：
