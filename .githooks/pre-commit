@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${SKIP_PI_COLLECTION_VALIDATE:-}" == "1" ]]; then
+  echo "[pi-collection] 跳过提交前校验（SKIP_PI_COLLECTION_VALIDATE=1）"
+  exit 0
+fi
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+python3 scripts/validate_collection.py --strict-suspicious --staged-only

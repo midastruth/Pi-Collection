@@ -25,12 +25,15 @@
 - [pi-model-switch](./Tool/pi-model-switch/) - 为 agent 提供 `switch_model` 工具，可列出、搜索并切换当前会话模型
 - [pi-web-search](./Tool/pi-web-search/) - 提供 `web_search` 与 `url_context` 工具，支持联网搜索与 URL 内容分析
 - [pi-interactive-subagents](./Workflow-Automation/pi-interactive-subagents/) - 异步子代理编排扩展，支持多窗格并行执行与结果异步回灌
+- [pi-subagents](./Workflow-Automation/pi-subagents/) - 通用子代理编排扩展，支持 `/run`、`/chain`、`/parallel`、Agents Manager、async 状态追踪与 worktree 隔离并行
 - [taskplane](./Workflow-Automation/taskplane/) - 面向 pi 的多代理任务编排系统，支持分波执行、review、merge 与本地 dashboard
 - [pi-autoresearch](./Workflow-Automation/pi-autoresearch/) - 自动实验优化循环扩展，支持 benchmark 执行、结果保留/回滚、dashboard 与 finalize skill
 - [pi-updater](./Utility-Developer-Experience/pi-updater/) - pi 本体自动更新扩展，支持启动检查、npm 安装升级与会话重启
 - [pi-rollback](./Command/pi-rollback/) - 分支感知的检查点与回滚扩展，支持 `/checkpoint` 打标、`/rollback` 退回更早节点，并自动保留被放弃分支的摘要
 - [pi-design-deck](./Tool/pi-design-deck/) - 为 agent 提供 `design_deck` 工具，以多幻灯片可视化决策面板呈现多方案对比，用户选择后结果直接返回 agent
 - [pi-caveman](./Event-Hook/pi-caveman/) - 通过 `before_agent_start` 注入压缩型回答规则，并配合 `/caveman` 命令、状态恢复与底部状态栏降低输出冗长度
+- [pi-jarvis](./UI-Notification/pi-jarvis/) - `/jarvis` 侧边对话 overlay，为主会话提供独立辅助线程、权限开关与 note/redirect 回传能力
+- [pi-thinking-steps](./UI-Notification/pi-thinking-steps/) - thinking 显示增强扩展，提供 collapsed / summary / expanded 三种终端推理视图
 
 ## 说明
 如果后续新增仓库：
@@ -38,3 +41,9 @@
 2. 在对应分类目录下创建仓库文件夹
 3. 将详细分析写入该仓库文件夹下的 `README.md`
 4. 再回到根目录 `README.md` 补充导航链接
+
+## 提交前校验
+- 手动执行：`python3 scripts/validate_collection.py`
+- 模拟提交前范围：`python3 scripts/validate_collection.py --strict-suspicious --staged-only`
+- 安装 Git Hook：`bash scripts/install-hooks.sh`
+- 说明文档：[`docs/commit-quality-gate.md`](./docs/commit-quality-gate.md)
