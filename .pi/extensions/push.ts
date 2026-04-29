@@ -1,6 +1,7 @@
 import type { ExecResult, ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
 const USER_MESSAGE = "Please push this worktree to GitHub main.";
+const STATUS_COMMAND = "git status --short --branch";
 const COMMAND = "GIT_TERMINAL_PROMPT=0 git push origin HEAD:main";
 const TIMEOUT_MS = 120_000;
 
@@ -21,6 +22,16 @@ function failureMessage(result: ExecResult): string {
 	].join("\n");
 }
 
+function dirtyWorktreeMessage(status: string): string {
+	return [
+		"The user asked to push this worktree to GitHub main, but the worktree has uncommitted changes.",
+		"",
+		"Do not run the push yet. Explain to the user that `git push` would only push committed history, not these local working-tree changes. Give concise next-step suggestions, such as reviewing the diff, committing the changes, stashing them, or discarding them if unwanted.",
+		"",
+		block("git status --short --branch", status || "<empty>"),
+	].join("\n");
+}
+
 export default function pushExtension(pi: ExtensionAPI) {
 	pi.registerCommand("push", {
 		description: "Push the current worktree to GitHub main",
@@ -35,9 +46,57 @@ export default function pushExtension(pi: ExtensionAPI) {
 				details: { kind: "request" },
 			});
 
-			ctx.ui.setStatus("push", "pushing → origin/main");
+			ctx.ui.setStatus("push", "checking worktree");
+			let currentCommand = STATUS_COMMAND;
 			try {
-				const result = await pi.exec("bash", ["-lc", COMMAND], {
+				const status = await pi.exec("bash", ["-lc", currentCommand], {
+					cwd: ctx.cwd,
+					timeout: 10_000,
+				});
+
+				if (status.code !== 0) {
+					pi.sendMessage(
+						{
+							customType: "push",
+							content: [
+								"The deterministic `/push` preflight check failed. Diagnose and handle the failure.",
+								"",
+								`Command: \`${STATUS_COMMAND}\``,
+								`Exit code: ${status.code}${status.killed ? " (killed)" : ""}`,
+								"",
+								block("stdout", status.stdout || "<empty>"),
+								"",
+								block("stderr", status.stderr || "<empty>"),
+							].join("\n"),
+							display: true,
+							details: { kind: "preflight-failure", command: STATUS_COMMAND, result: status },
+						},
+						{ triggerTurn: true },
+					);
+					return;
+				}
+
+				const changedLines = status.stdout
+					.split("\n")
+					.map((line) => line.trimEnd())
+					.filter((line) => line && !line.startsWith("##"));
+
+				if (changedLines.length > 0) {
+					pi.sendMessage(
+						{
+							customType: "push",
+							content: dirtyWorktreeMessage(status.stdout),
+							display: true,
+							details: { kind: "dirty-worktree", command: STATUS_COMMAND, status: status.stdout },
+						},
+						{ triggerTurn: true },
+					);
+					return;
+				}
+
+				ctx.ui.setStatus("push", "pushing → origin/main");
+				currentCommand = COMMAND;
+				const result = await pi.exec("bash", ["-lc", currentCommand], {
 					cwd: ctx.cwd,
 					timeout: TIMEOUT_MS,
 				});
@@ -68,9 +127,9 @@ export default function pushExtension(pi: ExtensionAPI) {
 					{
 						customType: "push",
 						content: [
-							"The deterministic `/push` bash command could not be started. Diagnose and handle the failure.",
+							"The deterministic `/push` command could not be started. Diagnose and handle the failure.",
 							"",
-							`Command: \`${COMMAND}\``,
+							`Command: \`${currentCommand}\``,
 							"",
 							block("error", message),
 						].join("\n"),
