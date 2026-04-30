@@ -221,7 +221,7 @@ export default function piAgora(pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "pi_agora_search",
 		label: "pi-agora Search",
-		description: "Search the local Pi Extensions Collection for extensions, skills, integrations, and workflow tools that match a user's desired capability.",
+		description: "Search the local pi-agora catalog for extensions, skills, integrations, and workflow tools that match a user's desired capability.",
 		promptSnippet: "Search curated Pi extension/skill records by user need, category, tag, or repository name.",
 		promptGuidelines: [
 			"Use pi_agora_search when the user asks what Pi extension, skill, integration, tool, workflow, notification, or automation capability they should install.",
@@ -245,7 +245,7 @@ export default function piAgora(pi: ExtensionAPI) {
 
 			if (results.length === 0) {
 				return {
-					content: [{ type: "text", text: "没有在 Pi Extensions Collection 中找到匹配项目。可以换更宽泛的关键词再试。" }],
+					content: [{ type: "text", text: "没有在 pi-agora 中找到匹配项目。可以换更宽泛的关键词再试。" }],
 					details: { count: 0, query: params.query ?? "" },
 				};
 			}
@@ -260,7 +260,7 @@ export default function piAgora(pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "pi_agora_install",
 		label: "pi-agora Install",
-		description: "Install a selected Pi extension/package from the local Pi Extensions Collection by repository name. Always asks for user confirmation before running pi install.",
+		description: "Install a selected Pi extension/package from the local pi-agora catalog by repository name. Always asks for user confirmation before running pi install.",
 		promptSnippet: "Install a selected package from pi-agora after the user clearly chooses it.",
 		promptGuidelines: [
 			"Use pi_agora_install only after the user clearly states which pi-agora project they want to install.",

@@ -235,7 +235,7 @@ def validate_structure(root: Path, strict_suspicious: bool, staged_only: bool) -
         warnings.extend(repo_warnings)
 
     if errors:
-        print("❌ Collection 校验失败：")
+        print("❌ pi-agora 校验失败：")
         for item in errors:
             print(f"- {item}")
         if warnings:
@@ -245,7 +245,7 @@ def validate_structure(root: Path, strict_suspicious: bool, staged_only: bool) -
         return 1
 
     scope_label = "（仅校验 staged 记录）" if staged_only else ""
-    print(f"✅ Collection 校验通过{scope_label}")
+    print(f"✅ pi-agora 校验通过{scope_label}")
     if staged_only and not repo_dirs_to_validate:
         if staged_files:
             print("ℹ️ 当前 staged 变更未涉及仓库详情目录，已跳过详细记录校验")
@@ -259,7 +259,7 @@ def validate_structure(root: Path, strict_suspicious: bool, staged_only: bool) -
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="校验 Pi Collection 的目录结构和文档完整性")
+    parser = argparse.ArgumentParser(description="校验 pi-agora 的目录结构和文档完整性")
     parser.add_argument(
         "--strict-suspicious",
         action="store_true",

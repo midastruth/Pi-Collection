@@ -1,6 +1,6 @@
-# Pi Extensions Collection
+# pi-agora
 
-这是一个按分类整理的 Pi 扩展 / Skills 资料库。
+这是一个按分类整理的 Pi 扩展 / Skills 资料库，也是一个名为 `pi-agora` 的 Pi package。
 
 - 根目录 `README.md` 只用作导航目录
 - **详细记录放在各分类文件夹中**
@@ -10,9 +10,9 @@
 本仓库现在也可以作为 Pi package 使用，扩展名为 `pi-agora`。安装后会注册 `pi_agora_search` / `pi_agora_install` 工具和 `/pi-agora` 命令，用来按需求推荐并安装已收录项目。首次加载时，扩展会让 LLM 先询问你想给 pi 增加什么能力；如需关闭首次引导，可设置 `PI_AGORA_AUTO_ONBOARD=0`。
 
 ```bash
-pi install https://github.com/midastruth/Pi-Collection
+pi install https://github.com/midastruth/pi-agora
 # 或本地测试
-pi -e /path/to/Pi-Collection
+pi -e /path/to/pi-agora
 ```
 
 安装后可输入：
