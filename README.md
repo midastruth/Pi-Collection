@@ -7,7 +7,7 @@
 - 每个仓库使用单独文件夹保存，便于后续继续补充截图、源码笔记、安装说明等内容
 
 ## 作为 Pi 扩展安装
-本仓库现在也可以作为 Pi package 使用，扩展名为 `pi-agora`。安装后会注册 `pi_agora_search` / `pi_agora_install` 工具和 `/pi-agora` 命令，用来按需求推荐并安装已收录项目。首次加载时，扩展会让 LLM 先只读了解当前项目上下文，再基于当下项目推荐可能有用的 Pi 扩展 / Skills；如需关闭首次引导，可设置 `PI_AGORA_AUTO_ONBOARD=0`。
+本仓库现在也可以作为 Pi package 使用，扩展名为 `pi-agora`。安装后会注册 `pi_agora_search` / `pi_agora_install` / `pi_agora_publish_guide` 工具和 `/pi-agora`、`/pi-agora-publish` 命令，用来按需求推荐、安装已收录项目，或帮助用户把自己的 Pi 扩展 / Skill / 能力增强项目发布收录到本仓库。首次加载时，扩展会让 LLM 先只读了解当前项目上下文，再基于当下项目推荐可能有用的 Pi 扩展 / Skills，并跟随用户当前使用的语言交流；如需关闭首次引导，可设置 `PI_AGORA_AUTO_ONBOARD=0`。
 
 ```bash
 pi install https://github.com/midastruth/pi-agora
@@ -19,6 +19,7 @@ pi -e /path/to/pi-agora
 
 ```text
 /pi-agora 我想给 pi 增加联网搜索能力
+/pi-agora-publish https://github.com/you/your-pi-extension
 ```
 
 ## 分类目录
