@@ -50,6 +50,7 @@ pi -e /path/to/pi-agora
 - [pi-autoresearch](./Workflow-Automation/pi-autoresearch/) - 自动实验优化循环扩展，支持 benchmark 执行、结果保留/回滚、dashboard 与 finalize skill
 - [pi-updater](./Utility-Developer-Experience/pi-updater/) - pi 本体自动更新扩展，支持启动检查、npm 安装升级与会话重启
 - [pi-rollback](./Command/pi-rollback/) - 分支感知的检查点与回滚扩展，支持 `/checkpoint` 打标、`/rollback` 退回更早节点，并自动保留被放弃分支的摘要
+- [pi-smart-btw](./Command/pi-smart-btw/) - `/btw <question>` 拉起无会话子 Pi 异步回答离题问题，默认仅显示于 transcript，需要时手动注入主会话
 - [pi-design-deck](./Tool/pi-design-deck/) - 为 agent 提供 `design_deck` 工具，以多幻灯片可视化决策面板呈现多方案对比，用户选择后结果直接返回 agent
 - [pi-vent](./Tool/pi-vent/) - 注册 `vent` 工具，把 agent 遇到的重大摩擦与复盘反馈追加到本地 `VENT.md`
 - [pi-live-terminal](./Tool/pi-live-terminal/) - 提供 `live_terminal_run` / `live_terminal_close` 工具，把长任务或交互式命令放进 tmux 并在 Pi 中实时显示
