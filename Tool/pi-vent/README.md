@@ -1,6 +1,7 @@
 # pi-vent
 
-- **GitHub**: [https://github.com/IgorWarzocha/pi-vent](https://github.com/IgorWarzocha/pi-vent)
+- **GitHub**: [https://github.com/IgorWarzocha/pi-vent](https://github.com/IgorWarzocha/pi-vent)（已迁移，跳转占位）
+- **当前源码**: [howaboua-pi-stuff/packages/pi-vent](https://github.com/IgorWarzocha/howaboua-pi-stuff/tree/main/packages/pi-vent)（见 [Utility-Developer-Experience/howaboua-pi-stuff](../../Utility-Developer-Experience/howaboua-pi-stuff/)）
 - **主分类**: Tool 扩展
 - **标签**: `typescript`, `local-only`, `minimal`, `beginner-friendly`
 - **一句话总结**: 为 pi 注册一个 `vent` 工具，让 agent 在遇到重大摩擦时把反馈追加到当前工作区的 `VENT.md`。
@@ -43,4 +44,5 @@ pi-vent 是一个很小的 Pi tool 扩展，核心作用是让 agent 把“值�
 - 喜欢轻量、本地优先、低配置工具的团队或个人
 
 ## 备注
-当前判断基于 README、`package.json` 与 `extensions/vent.ts`。虽然它包含少量 TUI 渲染逻辑，但核心价值是向 agent 提供一个可调用的本地反馈写入工具，因此归为 Tool 扩展。
+- 该包已迁入作者的 monorepo `howaboua-pi-stuff`，原独立仓库现仅保留跳转指引（旧文档存于 `README.legacy.md`），npm 安装方式不变（`@howaboua/pi-vent`）。
+- 当前判断基于 README、`package.json` 与 `extensions/vent.ts`。虽然它包含少量 TUI 渲染逻辑，但核心价值是向 agent 提供一个可调用的本地反馈写入工具，因此归为 Tool 扩展。

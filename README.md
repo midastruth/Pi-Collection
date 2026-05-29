@@ -48,6 +48,7 @@ pi -e /path/to/pi-agora
 - [pi-subagents](./Workflow-Automation/pi-subagents/) - 通用子代理编排扩展，支持 `/run`、`/chain`、`/parallel`、Agents Manager、async 状态追踪与 worktree 隔离并行
 - [taskplane](./Workflow-Automation/taskplane/) - 面向 pi 的多代理任务编排系统，支持分波执行、review、merge 与本地 dashboard
 - [pi-autoresearch](./Workflow-Automation/pi-autoresearch/) - 自动实验优化循环扩展，支持 benchmark 执行、结果保留/回滚、dashboard 与 finalize skill
+- [pi-dynamic-workflows](./Workflow-Automation/pi-dynamic-workflows/) - 注册 `workflow` 工具，让模型写确定性 JS 脚本，用 `agent`/`parallel`/`pipeline` 把任务 fan-out 到多个隔离子代理并汇总，对标 Claude Code dynamic workflows
 - [pi-updater](./Utility-Developer-Experience/pi-updater/) - pi 本体自动更新扩展，支持启动检查、npm 安装升级与会话重启
 - [pi-rollback](./Command/pi-rollback/) - 分支感知的检查点与回滚扩展，支持 `/checkpoint` 打标、`/rollback` 退回更早节点，并自动保留被放弃分支的摘要
 - [pi-smart-btw](./Command/pi-smart-btw/) - `/btw <question>` 拉起无会话子 Pi 异步回答离题问题，默认仅显示于 transcript，需要时手动注入主会话
@@ -55,10 +56,12 @@ pi -e /path/to/pi-agora
 - [pi-vent](./Tool/pi-vent/) - 注册 `vent` 工具，把 agent 遇到的重大摩擦与复盘反馈追加到本地 `VENT.md`
 - [pi-live-terminal](./Tool/pi-live-terminal/) - 提供 `live_terminal_run` / `live_terminal_close` 工具，把长任务或交互式命令放进 tmux 并在 Pi 中实时显示
 - [pi-codex-conversion](./Tool/pi-codex-conversion/) - Codex-oriented 工具与 provider adapter，把 Codex-like 模型的工具面切换为 `exec_command` / `write_stdin` / `apply_patch` 等 Codex 风格工具
+- [pi-codex-search](./Tool/pi-codex-search/) - 注册 `codex_search` 工具，复用 `openai-codex`（ChatGPT Codex 订阅）鉴权提供带引用来源的联网搜索，支持 1–5 查询并行与 `/codex-search-settings` 配置
 - [pi-caveman](./Event-Hook/pi-caveman/) - 通过 `before_agent_start` 注入压缩型回答规则，并配合 `/caveman` 命令、状态恢复与底部状态栏降低输出冗长度
 - [pi-jarvis](./UI-Notification/pi-jarvis/) - `/jarvis` 侧边对话 overlay，为主会话提供独立辅助线程、权限开关与 note/redirect 回传能力
 - [pi-thinking-steps](./UI-Notification/pi-thinking-steps/) - thinking 显示增强扩展，提供 collapsed / summary / expanded 三种终端推理视图
 - [pi-draw](./UI-Notification/pi-draw/) - 通过 `/draw` 或快捷键打开 tldraw 画布，将绘图导出为 PNG 并附加到当前 prompt
+- [howaboua-pi-stuff](./Utility-Developer-Experience/howaboua-pi-stuff/) - 作者 IgorWarzocha 的 Pi 工具箱 monorepo，聚合 ~11 扩展 + 6 skills，提供 pi-stuff/pi-extensions/pi-skills 三个一键安装 bundle（pi-vent/pi-smart-btw/pi-codex-conversion 的发布源）
 ## 说明
 如果后续新增仓库：
 1. 先判断主分类

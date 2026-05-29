@@ -1,6 +1,7 @@
 # pi-smart-btw
 
-- **GitHub**: https://github.com/IgorWarzocha/pi-smart-btw
+- **GitHub**: https://github.com/IgorWarzocha/pi-smart-btw （已迁移，跳转占位）
+- **当前源码**: [howaboua-pi-stuff/packages/pi-smart-btw](https://github.com/IgorWarzocha/howaboua-pi-stuff/tree/main/packages/pi-smart-btw)（见 [Utility-Developer-Experience/howaboua-pi-stuff](../../Utility-Developer-Experience/howaboua-pi-stuff/)）
 - **npm**: `@howaboua/pi-smart-btw`
 - **主分类**: Command 扩展
 - **标签**: `side-session`、`async`、`subagent`、`requires-config`、`typescript`
@@ -56,4 +57,5 @@
 - 与本仓库已收录的相近项目对比：
   - 与 `pi-jarvis` 相比：jarvis 是侧边 overlay 持续对话，pi-smart-btw 偏单次/少量轮次的离题问答，且显式区分"显示"与"注入"
   - 与 `pi-subagents`/`pi-interactive-subagents` 相比：那些偏多代理编排和并行流水线，pi-smart-btw 仅服务用户自己的临时问题，不做工作流串联
-- 当前版本 0.1.1，代码量很小，行为可一眼读完。
+- 当前版本代码量很小，行为可一眼读完。
+- 该包已迁入作者的 monorepo `howaboua-pi-stuff`，原独立仓库现仅保留跳转指引（旧文档存于 `README.legacy.md`），npm 安装方式不变（`@howaboua/pi-smart-btw`）。

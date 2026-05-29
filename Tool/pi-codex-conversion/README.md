@@ -1,6 +1,7 @@
 # pi-codex-conversion
 
-- **GitHub**: https://github.com/IgorWarzocha/pi-codex-conversion
+- **GitHub**: https://github.com/IgorWarzocha/pi-codex-conversion （已迁移，跳转占位）
+- **当前源码**: [howaboua-pi-stuff/packages/pi-codex-conversion](https://github.com/IgorWarzocha/howaboua-pi-stuff/tree/main/packages/pi-codex-conversion)（见 [Utility-Developer-Experience/howaboua-pi-stuff](../../Utility-Developer-Experience/howaboua-pi-stuff/)）
 - **主分类**: Tool 扩展
 - **标签**: `typescript`, `requires-config`, `third-party-api`, `production-oriented`
 - **一句话总结**: 将 Pi 在 Codex / GPT 类模型下的工具、提示词、执行渲染与 OpenAI Codex Responses provider 改造成更接近 Codex CLI 的工作方式。
@@ -61,5 +62,7 @@
 - 想研究 Pi provider、tool、event hook、message renderer 综合扩展写法的开发者
 
 ## 备注
+
+该包已迁入作者的 monorepo `howaboua-pi-stuff`，原独立仓库现仅保留跳转指引（旧文档存于 `README.legacy.md`），npm 安装方式不变（`@howaboua/pi-codex-conversion`）。
 
 当前判断基于 README、`package.json`、`src/index.ts`、`src/tools/`、`src/providers/openai-codex-custom-provider.ts` 与测试目录。该仓库是标准 Pi package，`package.json` 通过 `pi.extensions` 暴露 `./src/index.ts`。

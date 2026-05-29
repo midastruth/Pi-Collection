@@ -9,3 +9,4 @@
 - [pi-vent](./pi-vent/) - 注册 `vent` 工具，把 agent 遇到的重大摩擦与复盘反馈追加到本地 `VENT.md`
 - [pi-live-terminal](./pi-live-terminal/) - 提供 `live_terminal_run` / `live_terminal_close` 工具，把长任务或交互式命令放进 tmux 并在 Pi 中实时显示
 - [pi-codex-conversion](./pi-codex-conversion/) - Codex-oriented 工具与 provider adapter，把 Codex-like 模型的工具面切换为 `exec_command` / `write_stdin` / `apply_patch` 等 Codex 风格工具
+- [pi-codex-search](./pi-codex-search/) - 注册 `codex_search` 工具，复用 `openai-codex`（ChatGPT Codex 订阅）鉴权提供带引用来源的联网搜索，支持 1–5 查询并行
