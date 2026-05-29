@@ -41,6 +41,11 @@ function packageRoot(): string {
 	return path.resolve(here, "../..");
 }
 
+/** Directory that holds the pi-agora SKILL.md skill packages. */
+function skillsDir(): string {
+	return path.join(packageRoot(), "skills");
+}
+
 function stripMarkdown(input: string): string {
 	return input
 		.replace(/`([^`]+)`/g, "$1")
@@ -207,36 +212,29 @@ function writeConfig(config: AssistantConfig) {
 	writeFileSync(file, `${JSON.stringify(config, null, 2)}\n`);
 }
 
-function advisorPrompt(userNeed: string): string {
+/**
+ * Build a short prompt that hands control to a registered skill.
+ * The detailed workflow now lives in skills/<name>/SKILL.md, so the command
+ * only needs to invoke the skill and pass along the user's request.
+ */
+function recommendPrompt(userNeed: string): string {
 	return [
-		"我刚安装了 pi-agora。",
+		"请使用 recommend-tools 这个 Skill 来帮我。",
 		"请使用用户当前使用的语言交流；如果用户切换语言，也跟随切换。",
 		`我的需求是：${userNeed}`,
-		"请结合当前项目上下文理解这个需求；如上下文不足，可以先简短询问补充信息。",
-		"请调用 pi_agora_search 在本地收藏库中检索候选项目，然后给出 3 个以内推荐。",
-		"每个推荐请说明：为什么适合当前项目、能解决什么问题、是否需要配置、安装命令或安装来源、风险/限制。",
-		"如果我明确选择其中一个项目并要求安装，请调用 pi_agora_install；安装前需要让我确认。",
+	].join("\n");
+}
+
+function publishPrompt(userInput: string): string {
+	return [
+		"请使用 publish-extension 这个 Skill 来帮我把项目收录到 pi-agora。",
+		"请使用用户当前使用的语言交流；如果用户切换语言，也跟随切换。",
+		userInput ? `我的补充信息是：${userInput}` : "我还没有提供完整项目信息，请按 Skill 流程引导我。",
 	].join("\n");
 }
 
 function isPublishIntent(input: string): boolean {
 	return /发布|提交|收录|投稿|上架|登记|贡献|contribut|submit|publish|add\s+(?:my\s+)?(?:extension|plugin|skill)/i.test(input);
-}
-
-function publisherPrompt(userInput: string): string {
-	return [
-		"我想把自己的 Pi 插件、扩展、Skill 或增强 Pi 能力的项目发布/收录到 pi-agora。",
-		userInput ? `我的补充信息是：${userInput}` : "我还没有提供完整项目信息。",
-		"请作为 pi-agora 收录助手，使用用户当前使用的语言帮助我完成发布流程；如果用户切换语言，也跟随切换。",
-		"如果用户有 GitHub 仓库链接，请阅读 README、package.json、src/、扩展入口、命令/tool/event/UI 相关代码与安装说明。",
-		"如果用户没有 GitHub，但当前项目里有 Pi extension / Skill，请先做只读本地检查：package.json 的 pi.extensions、extensions/、skills/、SKILL.md、src/、README、安装脚本与配置示例。",
-		"没有 GitHub 时，不要声称已经公开发布；请帮助用户把本地项目整理成可发布包：补齐 README、license、package.json metadata、安装说明、配置说明、截图/示例，并生成可复制的 pi-agora 收录记录草稿。",
-		"同时说明 pi-agora 的公共收录通常需要一个可访问来源；推荐创建 GitHub 仓库，也可让维护者代提交或先保留本地 submission draft。",
-		"判断它是否与 Pi 扩展 / Skills / agent 能力扩展相关，并按功能选择主分类：Command、Tool、Event-Hook、UI-Notification、Workflow-Automation、Integration、Template-Example、Utility-Developer-Experience。",
-		"如果当前工作区就是 pi-agora 仓库，并且我确认要收录，请创建/更新对应分类下的仓库 README，更新根 README 与分类 README，运行 python3 scripts/validate_collection.py；提交或推送前需要我明确要求。",
-		"如果当前工作区不是 pi-agora 仓库，请不要修改当前项目，除非用户明确要求整理发布材料；请指导我 fork/clone https://github.com/midastruth/pi-agora，或准备可复制的收录记录/PR 步骤。",
-		"记录内容要提炼实际价值，不要照抄 README；信息不足时明确写未明确说明或需要进一步确认。",
-	].join("\n");
 }
 
 function publishGuide(repositoryUrl = "", projectName = "", capability = "", localProject = false): string {
@@ -264,6 +262,14 @@ function publishGuide(repositoryUrl = "", projectName = "", capability = "", loc
 }
 
 export default function piAgora(pi: ExtensionAPI) {
+	// Expose the bundled SKILL.md packages to Pi so they become first-class,
+	// model-invocable skills (also reachable via /skill:recommend-tools etc.).
+	pi.on("resources_discover", () => {
+		const dir = skillsDir();
+		if (!existsSync(dir)) return {};
+		return { skillPaths: [dir] };
+	});
+
 	pi.registerTool({
 		name: "pi_agora_search",
 		label: "pi-agora Search",
@@ -416,7 +422,7 @@ export default function piAgora(pi: ExtensionAPI) {
 	});
 
 	pi.registerCommand("pi-agora", {
-		description: "启动 pi-agora 扩展/Skill 推荐、安装与发布向导",
+		description: "用 recommend-tools / publish-extension Skill 推荐、安装或收录 Pi 扩展",
 		handler: async (args, ctx) => {
 			let need = args.trim();
 			if (!need && ctx.hasUI) {
@@ -429,7 +435,7 @@ export default function piAgora(pi: ExtensionAPI) {
 			}
 
 			const publishIntent = isPublishIntent(need);
-			const prompt = publishIntent ? publisherPrompt(need) : advisorPrompt(need);
+			const prompt = publishIntent ? publishPrompt(need) : recommendPrompt(need);
 			if (ctx.isIdle()) {
 				pi.sendUserMessage(prompt);
 			} else {
@@ -440,14 +446,14 @@ export default function piAgora(pi: ExtensionAPI) {
 	});
 
 	pi.registerCommand("pi-agora-publish", {
-		description: "帮助把自己的 Pi 扩展 / Skill / 能力增强项目发布或收录到 pi-agora",
+		description: "用 publish-extension Skill 把自己的 Pi 扩展 / Skill / 能力增强项目收录到 pi-agora",
 		handler: async (args, ctx) => {
 			let info = args.trim();
 			if (!info && ctx.hasUI) {
 				info = (await ctx.ui.input("pi-agora 发布", "请提供 GitHub 仓库链接；如果没有 GitHub，也可以说明当前项目里有哪些 Pi 扩展 / Skill。"))?.trim() ?? "";
 			}
 
-			const prompt = publisherPrompt(info || "我没有 GitHub 仓库，请检查当前本地项目是否包含 Pi 扩展 / Skill，并帮助我准备发布材料。");
+			const prompt = publishPrompt(info || "我没有 GitHub 仓库，请检查当前本地项目是否包含 Pi 扩展 / Skill，并帮助我准备发布材料。");
 			if (ctx.isIdle()) {
 				pi.sendUserMessage(prompt);
 			} else {
@@ -458,10 +464,10 @@ export default function piAgora(pi: ExtensionAPI) {
 	});
 
 	pi.registerCommand("pi-publish", {
-		description: "发布或收录当前本地 Pi 扩展 / Skill 项目到 pi-agora 的快捷入口",
+		description: "用 publish-extension Skill 为当前本地 Pi 扩展 / Skill 项目准备发布材料",
 		handler: async (args, ctx) => {
 			const info = args.trim() || "我没有 GitHub 仓库，但当前项目里有 Pi 扩展 / Skill；请只读检查本地项目并帮助我准备发布材料。";
-			const prompt = publisherPrompt(info);
+			const prompt = publishPrompt(info);
 			if (ctx.isIdle()) {
 				pi.sendUserMessage(prompt);
 			} else {
@@ -483,20 +489,9 @@ export default function piAgora(pi: ExtensionAPI) {
 		}
 
 		writeConfig({ ...config, onboarded: true });
-		pi.sendUserMessage([
-			{
-				type: "text",
-				text: [
-					"pi-agora 已安装。请作为 Pi 扩展安装与发布向导，使用用户当前使用的语言交流；如果用户切换语言，也跟随切换。",
-					"根据当前项目推荐可能有用的 Pi 扩展 / Skills。",
-					"先快速了解当前项目上下文，例如 README、package.json、目录结构或已暴露的环境信息；只做只读检查，不要修改文件。",
-					"然后调用 pi_agora_search 检索本仓库记录，给出 3 个以内推荐；每个推荐说明为什么适合当前项目、需要什么配置、安装来源以及风险/限制。",
-					"如果用户想发布、提交、收录自己的插件、扩展、Skill 或 Pi 能力增强项目，请改走发布流程：优先收集 GitHub 链接；如果用户没有 GitHub 但当前项目包含 Pi extension / Skill，则只读检查本地项目并帮助准备发布材料、收录记录草稿或 PR 步骤。必要时调用 pi_agora_publish_guide。",
-					"如果当前项目上下文不足，请先给出可能的能力方向，并用一句话询问我更具体的目标。",
-					"等我明确选择要安装的项目后，再调用 pi_agora_install；安装前需要让我确认。",
-					"同时告诉我也可以输入 /pi-agora <功能需求> 直接启动推荐，输入 /pi-agora-publish <GitHub 链接> 发布/收录公开项目，或输入 /pi-publish 为没有 GitHub 的本地项目准备发布材料。"
-				].join("\n"),
-			},
-		]);
+		ctx.ui.notify(
+			"pi-agora 已安装：已加载 recommend-tools 与 publish-extension 两个 Skill。输入 /pi-agora <功能需求> 获取推荐，或 /pi-agora-publish 收录自己的扩展。",
+			"info",
+		);
 	});
 }

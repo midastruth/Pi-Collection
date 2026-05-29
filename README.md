@@ -7,7 +7,15 @@
 - 每个仓库使用单独文件夹保存，便于后续继续补充截图、源码笔记、安装说明等内容
 
 ## 作为 Pi 扩展安装
-本仓库现在也可以作为 Pi package 使用，扩展名为 `pi-agora`。安装后会注册 `pi_agora_search` / `pi_agora_install` / `pi_agora_publish_guide` 工具和 `/pi-agora`、`/pi-agora-publish`、`/pi-publish` 命令，用来按需求推荐、安装已收录项目，或帮助用户把自己的 Pi 扩展 / Skill / 能力增强项目发布收录到本仓库。首次加载时，扩展会让 LLM 先只读了解当前项目上下文，再基于当下项目推荐可能有用的 Pi 扩展 / Skills，并跟随用户当前使用的语言交流；如需关闭首次引导，可设置 `PI_AGORA_AUTO_ONBOARD=0`。
+本仓库可以作为 Pi package 使用，扩展名为 `pi-agora`。它采用 **Skill 驱动** 的方式工作：
+
+- 随包提供两个 Pi Skill（`SKILL.md`），通过 `package.json` 的 `pi.skills` 注册，也在运行时通过 `resources_discover` 事件暴露 `skills/` 目录：
+  - `recommend-tools`：根据需求在本地收藏库检索并推荐合适的 Pi 扩展，确认后协助安装
+  - `publish-extension`：帮助用户把自己的 Pi 扩展 / Skill / 能力增强项目收录到 pi-agora
+- 提供底层工具供 Skill 调用：`pi_agora_search`（检索）、`pi_agora_install`（安装）、`pi_agora_publish_guide`（发布流程提示）
+- 提供命令作为 Skill 的快捷入口：`/pi-agora`、`/pi-agora-publish`、`/pi-publish`
+
+这两个 Skill 是 model-invocable 的：用户描述需求时模型会自动触发，也可以用 `/skill:recommend-tools`、`/skill:publish-extension` 显式调用，或用 `/pi-agora <需求>` 启动。首次加载会提示已加载的 Skill；如需关闭首次提示，可设置 `PI_AGORA_AUTO_ONBOARD=0`。
 
 ```bash
 pi install https://github.com/midastruth/pi-agora
@@ -20,10 +28,14 @@ pi -e /path/to/pi-agora
 安装后可输入：
 
 ```text
-/pi-agora 我想给 pi 增加联网搜索能力
+/pi-agora 我想给 pi 增加联网搜索能力      # 触发 recommend-tools Skill
+/skill:recommend-tools                   # 显式调用推荐 Skill
 /pi-agora-publish https://github.com/you/your-pi-extension
+/skill:publish-extension                 # 显式调用发布 Skill
 /pi-publish  # 没有 GitHub 时，为当前本地 Pi 扩展 / Skill 项目准备发布材料
 ```
+
+> 也可以直接用自然语言描述需求（例如“我想要个代码审查工具”），pi-agora 的 Skill 会被模型自动触发。
 
 ## 分类目录
 - [Command 扩展](./Command/)

@@ -13,6 +13,10 @@
   "pi": {
     "extensions": [
       "./extensions/pi-agora/index.ts"
+    ],
+    "skills": [
+      "./skills/recommend-tools/SKILL.md",
+      "./skills/publish-extension/SKILL.md"
     ]
   },
   "peerDependencies": {
